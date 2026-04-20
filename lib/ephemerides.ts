@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"
+import { getSupabase } from "@/lib/supabase"
 
 export interface Ephemeris {
   date: string; // MM-DD format
@@ -117,7 +117,7 @@ export async function getTodayEphemeris(): Promise<Ephemeris | null> {
   const todayString = `${month}-${day}`;
 
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from("ephemerides")
       .select("date, year, title, description, category")
       .eq("date", todayString)
@@ -134,13 +134,13 @@ export async function getTodayEphemeris(): Promise<Ephemeris | null> {
 
 export async function getRandomEphemeris(): Promise<Ephemeris> {
   try {
-    const { count } = await supabase
+    const { count } = await getSupabase()
       .from("ephemerides")
       .select("*", { count: "exact", head: true });
 
     if (count && count > 0) {
       const offset = Math.floor(Math.random() * count);
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from("ephemerides")
         .select("date, year, title, description, category")
         .range(offset, offset)

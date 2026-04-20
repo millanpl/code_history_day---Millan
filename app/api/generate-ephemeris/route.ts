@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
-import { supabaseAdmin } from "@/lib/supabase-admin"
+import { getSupabaseAdmin } from "@/lib/supabase-admin"
 
 const VALID_CATEGORIES = ["language", "hardware", "software", "internet", "person", "company"] as const
 
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
   const readableDate = `${parseInt(day)} de ${monthNames[parseInt(month) - 1]}`
 
   // Check if an ephemeris already exists for tomorrow
-  const { data: existing } = await supabaseAdmin
+  const { data: existing } = await getSupabaseAdmin()
     .from("ephemerides")
     .select("id")
     .eq("date", tomorrowDate)
@@ -114,7 +114,7 @@ Responde SOLO con un JSON con esta estructura exacta:
   }
 
   // Insert into Supabase
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseAdmin()
     .from("ephemerides")
     .insert({
       date: tomorrowDate,
